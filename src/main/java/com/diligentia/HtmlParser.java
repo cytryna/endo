@@ -17,13 +17,13 @@ public class HtmlParser {
             parseMember(element);
         }
 
-        String text = doc.body().text(); // "An example link"
-        String linkHref = ranking.attr("href"); // "http://example.com/"
-        String linkText = ranking.text(); // "example""
-
-        String linkOuterH = ranking.outerHtml();
-        // "<a href="http://example.com"><b>example</b></a>"
-        String linkInnerH = ranking.html(); // "<b>example</b>"
+//        String text = doc.body().text(); // "An example link"
+//        String linkHref = ranking.attr("href"); // "http://example.com/"
+//        String linkText = ranking.text(); // "example""
+//
+//        String linkOuterH = ranking.outerHtml();
+//        // "<a href="http://example.com"><b>example</b></a>"
+//        String linkInnerH = ranking.html(); // "<b>example</b>"
     }
 
     private void parseMember(Element element) {
