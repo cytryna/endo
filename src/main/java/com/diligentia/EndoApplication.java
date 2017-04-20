@@ -13,7 +13,10 @@ public class EndoApplication {
 		for (int i = 0; i < 100; i++) {
 			System.err.println("ssssssssss");
 		}
+
+
 //		https://github.com/MoOmEeN/endo2java
+//		https://github.com/Gvaireth/EndoConnector
 
 	}
 }

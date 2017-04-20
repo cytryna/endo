@@ -30,13 +30,12 @@ public class DownloadPage {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-        String line = null;
 
         // read each line and write to System.out
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-
+        String response = new String();
+        for (String line; (line = br.readLine()) != null; response += line);
+//        System.err.println(response);
+        new HtmlParser().parse(response);
 
     }
 }
