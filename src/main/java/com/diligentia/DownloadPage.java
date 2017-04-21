@@ -1,5 +1,9 @@
 package com.diligentia;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,35 +11,41 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-
+@Component
 public class DownloadPage {
 
-    public static void main(String[] args) throws IOException {
+    @PostConstruct
+	public void startBean() {
 
-        // Make a URL to the web page
-        URL url = new URL("https://www.endomondo.com/challenges/32706833");
+		for (int i = 0; i < 10; i++) {
+			try {
+				dowloadAndParse("https://www.endomondo.com/challenges/32706833");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 
-        // Get the input stream through URL Connection
-        URLConnection con = url.openConnection();
-        InputStream is =con.getInputStream();
+	}
 
-        // Once you have the Input Stream, it's just plain old Java IO stuff.
+	public void dowloadAndParse(String urlStr) throws IOException {
 
-        // For this case, since you are interested in getting plain-text web page
-        // I'll use a reader and output the text conten to System.out.
+		// Make a URL to the web page
+		URL url = new URL(urlStr);
 
-        // For binary content, it's better to directly read the bytes from stream and write
-        // to the target file.
+		// Get the input stream through URL Connection
+		URLConnection con = url.openConnection();
+		InputStream is = con.getInputStream();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
+		String response = new String();
+		for (String line; (line = br.readLine()) != null; response += line)
+			;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-
-        // read each line and write to System.out
-        String response = new String();
-        for (String line; (line = br.readLine()) != null; response += line);
-//        System.err.println(response);
-        new HtmlParser().parse(response);
-
-    }
+		new HtmlParser().parse(response);
+	}
 }
