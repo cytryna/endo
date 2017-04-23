@@ -18,15 +18,20 @@ import org.jsoup.select.Elements;
 
 public class HtmlParser {
 
-	public void parse(String html) {
-		Document doc = Jsoup.parse(html);
-		Elements ranking = doc.select("div.chart-row");
+    public void parse(Document doc) {
 
-		List<Person> personList = new ArrayList<>();
-		for (int i = 0; i < ranking.size(); i++) {
-			Element element = ranking.get(i);
-			personList.add(parseMember(element));
-		}
+        Elements ranking = doc.select("div.chart-row");
+
+        List<Person> personList = new ArrayList<>();
+        for (int i = 0; i < ranking.size(); i++) {
+            Element element = ranking.get(i);
+            personList.add(parseMember(element));
+        }
+    }
+
+	public void parse(String html) {
+        Document doc = Jsoup.parse(html);
+        parse(doc);
 	}
 
 	private Person parseMember(Element element) {
@@ -35,5 +40,6 @@ public class HtmlParser {
 		score = score.substring(0, score.indexOf("kcal") - 1);
 		return new Person(name, Integer.valueOf(score));
 	}
+
 
 }
