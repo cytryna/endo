@@ -3,8 +3,6 @@ package com.diligentia;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,15 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Component
 public class DownloadPage {
 
-    public static final String HTTP_URL = "https://www.endomondo.com/challenges/32422477";
-    public static final String HTTP_URL_SESSION = "http://www.endomondo.com/rest/session";
+    public static final String HTTP_URL_HOME = "https://www.endomondo.com/home";
+    public static final String HTTP_URL_SESSION = "https://www.endomondo.com/rest/session";
+    public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/challenges/32422477";
 
     @PostConstruct
 	public void startBean() {
@@ -34,13 +31,13 @@ public class DownloadPage {
 		}
 
 		try {
-			dowloadAndParse(HTTP_URL);
+			dowloadAndParse(HTTP_URL_CHALLENGE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 //		for (int i = 0; i < 10; i++) {
 //			try {
-//				dowloadAndParse(HTTP_URL);
+//				dowloadAndParse(HTTP_URL_CHALLENGES);
 //			} catch (IOException e) {
 //				e.printStackTrace();
 //			}
@@ -55,26 +52,40 @@ public class DownloadPage {
 
     private void conectAndGetSession() throws IOException {
 
-        //This will get you the response.
-//        Connection.Response res = Jsoup
-//                .connect("https://www.endomondo.com/rest/session")
-////                .data("{email: \"radoslaw.wichrowski@gmail.com\", password: \"pass\", remember: true}")
-//                .data("email", "radoslaw.wichrowski@gmail.com")
-//                .data("password", "pass")
-//                .data("remember", "true")
-////				.userAgent("Mozilla")
-//                .method(Connection.Method.POST)
-//                .execute();
+		Connection.Response res = Jsoup
+				.connect(HTTP_URL_HOME)
+				.method(Connection.Method.GET)
+//				.userAgent("Mozilla")
+				.execute();
+		Map<String, String> cookies = res.cookies();
+
+		System.err.println(cookies.get("CSRF_TOKEN"));
+
+		//This will get you the response.
+		Connection.Response  res2 = Jsoup
+                .connect(HTTP_URL_SESSION)
+                .data("email", "radoslaw.wichrowski@gmail.com")
+                .data("password", "")
+                .data("remember", "true")
+				.cookies(cookies)
+                .method(Connection.Method.POST)
+                .execute();
+//
+//		System.err.println("dddddddddddddddddd");
+//		Map<String, String> cookies2 = res.cookies();
 
 
-		Document doc = Jsoup.connect("https://www.endomondo.com/rest/session")
-				.data("email", "radoslaw.wichrowski@gmail.com")
-				.data("pass", "pass")
-				.data("remember", "true")
-// and other hidden fields which are being passed in post request.
-				.userAgent("Mozilla")
-				.post();
-		System.out.println(doc); // will print html source of homepage of facebook.
+//		Document doc = Jsoup.connect("https://www.endomondo.com/rest/session")
+//				.data("email", "radoslaw.wichrowski@gmail.com")
+//				.data("pass", "qwerty")
+//				.data("remember", "true")
+//				.cookies(cookies)
+//// and other hidden fields which are being passed in post request.
+//				.userAgent("Mozilla")
+//				.post();
+//		System.out.println(doc);
+
+		// will print html source of homepage of facebook.
 //		// Document doc = Jsoup.connect("http://www.facebook.com")
 //				.data("email", "radoslaw.wichrowski@gmail.com")
 //				.data("pass", "pass")
@@ -88,7 +99,7 @@ public class DownloadPage {
 //        Map<String, String> cookies = res.cookies();
 //
 ////And this is the easieste way I've found to remain in session
-//        Document doc = Jsoup.connect(HTTP_URL).cookies(cookies).get();
+//        Document doc = Jsoup.connect(HTTP_URL_CHALLENGES).cookies(cookies).get();
 //
 //		System.err.println(doc.body().text());
 //		new HtmlParser().parse(doc);
