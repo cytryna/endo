@@ -1,5 +1,7 @@
 package com.diligentia;
 
+import com.diligentia.model.SessionLoginRequest;
+import com.google.gson.Gson;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -51,59 +53,35 @@ public class DownloadPage {
 	}
 
     private void conectAndGetSession() throws IOException {
-
+		Gson gson = new Gson();
 		Connection.Response res = Jsoup
 				.connect(HTTP_URL_HOME)
+				.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
 				.method(Connection.Method.GET)
-//				.userAgent("Mozilla")
 				.execute();
 		Map<String, String> cookies = res.cookies();
 
 		System.err.println(cookies.get("CSRF_TOKEN"));
 
+		SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "", true);
 		//This will get you the response.
-		Connection.Response  res2 = Jsoup
+		System.err.println(gson.toJson(sessionLoginRequest));
+		Document res2 = Jsoup
                 .connect(HTTP_URL_SESSION)
-                .data("email", "radoslaw.wichrowski@gmail.com")
-                .data("password", "")
-                .data("remember", "true")
+				.requestBody(gson.toJson(sessionLoginRequest))
+				.header("X-CSRF-TOKEN", cookies.get("CSRF_TOKEN"))
+				.header("Content-Type", "application/json;charset=utf-8")
+				.header("Accept", "application/json, text/plain, */*")
+				.header("Accept-Language", "en-US,en;q=0.5")
+				.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
+//				.proxy("127.0.0.1", 8080)
+//				.validateTLSCertificates(false)
 				.cookies(cookies)
-                .method(Connection.Method.POST)
-                .execute();
-//
-//		System.err.println("dddddddddddddddddd");
-//		Map<String, String> cookies2 = res.cookies();
+				.ignoreContentType(true)
+                .post();
 
-
-//		Document doc = Jsoup.connect("https://www.endomondo.com/rest/session")
-//				.data("email", "radoslaw.wichrowski@gmail.com")
-//				.data("pass", "qwerty")
-//				.data("remember", "true")
-//				.cookies(cookies)
-//// and other hidden fields which are being passed in post request.
-//				.userAgent("Mozilla")
-//				.post();
-//		System.out.println(doc);
-
-		// will print html source of homepage of facebook.
-//		// Document doc = Jsoup.connect("http://www.facebook.com")
-//				.data("email", "radoslaw.wichrowski@gmail.com")
-//				.data("pass", "pass")
-//// and other hidden fields which are being passed in post request.
-//				.userAgent("Mozilla")
-//				.post();
-//		System.out.println(doc); // will print html source of homepage of facebook.
-
-
-//This will get you cookies
-//        Map<String, String> cookies = res.cookies();
-//
-////And this is the easieste way I've found to remain in session
-//        Document doc = Jsoup.connect(HTTP_URL_CHALLENGES).cookies(cookies).get();
-//
-//		System.err.println(doc.body().text());
-//		new HtmlParser().parse(doc);
-
+		Map<String, String> cookies2 = res.cookies();
+		System.out.println(cookies2);
     }
 
     public void dowloadAndParse(String urlStr) throws IOException {

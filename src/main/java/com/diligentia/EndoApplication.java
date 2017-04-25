@@ -6,8 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EndoApplication {
 
-	private DownloadPage downloadPage = new DownloadPage();
-
 	public static void main(String[] args) {
 		SpringApplication.run(EndoApplication.class, args);
 
