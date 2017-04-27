@@ -22,18 +22,19 @@ public class DownloadPage {
     public static final String HTTP_URL_HOME = "https://www.endomondo.com/home";
     public static final String HTTP_URL_SESSION = "https://www.endomondo.com/rest/session";
     public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/challenges/32422477";
+	private SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "", true);
 
     @PostConstruct
 	public void startBean() {
-
+		Map<String, String> cookies = null;
 		try {
-			conectAndGetSession();
+			cookies = conectAndGetSession();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		try {
-			dowloadAndParse(HTTP_URL_CHALLENGE);
+			dowloadAndParse(HTTP_URL_CHALLENGE, cookies);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -52,7 +53,7 @@ public class DownloadPage {
 
 	}
 
-    private void conectAndGetSession() throws IOException {
+    private Map<String, String> conectAndGetSession() throws IOException {
 		Gson gson = new Gson();
 		Connection.Response res = Jsoup
 				.connect(HTTP_URL_HOME)
@@ -61,9 +62,9 @@ public class DownloadPage {
 				.execute();
 		Map<String, String> cookies = res.cookies();
 
-		System.err.println(cookies.get("CSRF_TOKEN"));
+//		System.err.println(cookies.get("CSRF_TOKEN"));
 
-		SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "", true);
+
 		//This will get you the response.
 		System.err.println(gson.toJson(sessionLoginRequest));
 		Document res2 = Jsoup
@@ -80,24 +81,42 @@ public class DownloadPage {
 				.ignoreContentType(true)
                 .post();
 
-		Map<String, String> cookies2 = res.cookies();
-		System.out.println(cookies2);
+		System.out.println(res.cookies());
+		return res.cookies();
     }
 
-    public void dowloadAndParse(String urlStr) throws IOException {
+    public void dowloadAndParse(String urlStr, Map<String, String> cookies) throws IOException {
+		Gson gson = new Gson();
+		Document res = Jsoup
+				.connect(urlStr)
+				.requestBody(gson.toJson(sessionLoginRequest))
+				.header("X-CSRF-TOKEN", cookies.get("CSRF_TOKEN"))
+				.header("Content-Type", "application/json;charset=utf-8")
+				.header("Accept", "application/json, text/plain, */*")
+				.header("Accept-Language", "en-US,en;q=0.5")
+				.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
+//				.proxy("127.0.0.1", 8080)
+//				.validateTLSCertificates(false)
+				.cookies(cookies)
+				.ignoreContentType(true)
+				.get();
 
-		// Make a URL to the web page
-		URL url = new URL(urlStr);
+//		System.err.println(res.body().text());
 
-		// Get the input stream through URL Connection
-		URLConnection con = url.openConnection();
-		InputStream is = con.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
-		String response = new String();
-		for (String line; (line = br.readLine()) != null; response += line)
-			;
-
-		new HtmlParser().parse(response);
+//		// Make a URL to the web page
+//		URL url = new URL(urlStr);
+//
+//		// Get the input stream through URL Connection
+//		URLConnection con = url.openConnection();
+//		InputStream is = con.getInputStream();
+//		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//
+//		String response = new String();
+//		for (String line; (line = br.readLine()) != null; response += line)
+//			;
+//
+//		System.err.println(response);
+//		new HtmlParser().parse(response);
 	}
 }
