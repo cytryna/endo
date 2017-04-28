@@ -22,7 +22,8 @@ public class DownloadPage {
     public static final String HTTP_URL_HOME = "https://www.endomondo.com/home";
     public static final String HTTP_URL_SESSION = "https://www.endomondo.com/rest/session";
     public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/challenges/32422477";
-	private SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "", true);
+//	public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/rest/v1/challenges/32422477/ranking?filter=FRIENDS&user=3026103&radius=1";
+	private SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "qwerty", true);
 
     @PostConstruct
 	public void startBean() {
@@ -81,15 +82,15 @@ public class DownloadPage {
 				.ignoreContentType(true)
                 .post();
 
-		System.out.println(res.cookies());
+
 		return res.cookies();
     }
 
     public void dowloadAndParse(String urlStr, Map<String, String> cookies) throws IOException {
 		Gson gson = new Gson();
-		Document res = Jsoup
-				.connect(urlStr)
-				.requestBody(gson.toJson(sessionLoginRequest))
+		Connection.Response res = Jsoup
+				.connect(HTTP_URL_CHALLENGE)
+//				.requestBody(gson.toJson(sessionLoginRequest))
 				.header("X-CSRF-TOKEN", cookies.get("CSRF_TOKEN"))
 				.header("Content-Type", "application/json;charset=utf-8")
 				.header("Accept", "application/json, text/plain, */*")
@@ -99,9 +100,10 @@ public class DownloadPage {
 //				.validateTLSCertificates(false)
 				.cookies(cookies)
 				.ignoreContentType(true)
-				.get();
+				.method(Connection.Method.GET)
+				.execute();
 
-//		System.err.println(res.body().text());
+		System.err.println(res.body());
 
 
 //		// Make a URL to the web page
