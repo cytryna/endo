@@ -22,8 +22,8 @@ public class DownloadPage {
     public static final String HTTP_URL_HOME = "https://www.endomondo.com/home";
     public static final String HTTP_URL_SESSION = "https://www.endomondo.com/rest/session";
     public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/challenges/32422477";
-//	public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/rest/v1/challenges/32422477/ranking?filter=FRIENDS&user=3026103&radius=1";
-	private SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "qwerty", true);
+//	public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/rest/v1/challenges/32422477";
+	private SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "", true);
 
     @PostConstruct
 	public void startBean() {
@@ -68,7 +68,7 @@ public class DownloadPage {
 
 		//This will get you the response.
 		System.err.println(gson.toJson(sessionLoginRequest));
-		Document res2 = Jsoup
+		Connection.Response res2 = Jsoup
                 .connect(HTTP_URL_SESSION)
 				.requestBody(gson.toJson(sessionLoginRequest))
 				.header("X-CSRF-TOKEN", cookies.get("CSRF_TOKEN"))
@@ -80,15 +80,11 @@ public class DownloadPage {
 //				.validateTLSCertificates(false)
 				.cookies(cookies)
 				.ignoreContentType(true)
-                .post();
+				.method(Connection.Method.POST)
+                .execute();
 
 
-		return res.cookies();
-    }
-
-    public void dowloadAndParse(String urlStr, Map<String, String> cookies) throws IOException {
-		Gson gson = new Gson();
-		Connection.Response res = Jsoup
+		Connection.Response res3 = Jsoup
 				.connect(HTTP_URL_CHALLENGE)
 //				.requestBody(gson.toJson(sessionLoginRequest))
 				.header("X-CSRF-TOKEN", cookies.get("CSRF_TOKEN"))
@@ -98,12 +94,19 @@ public class DownloadPage {
 				.userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
 //				.proxy("127.0.0.1", 8080)
 //				.validateTLSCertificates(false)
-				.cookies(cookies)
+				.cookies(res2.cookies())
 				.ignoreContentType(true)
 				.method(Connection.Method.GET)
 				.execute();
 
-		System.err.println(res.body());
+		System.err.println(res3.body().toString());
+
+
+		return null;
+    }
+
+    public void dowloadAndParse(String urlStr, Map<String, String> cookies) throws IOException {
+
 
 
 //		// Make a URL to the web page
