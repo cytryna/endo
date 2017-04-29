@@ -8,16 +8,5 @@ public class EndoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EndoApplication.class, args);
-
-
-
-//		for (int i = 0; i < 100; i++) {
-//			System.err.println("ssssssssss");
-//		}
-
-
-//		https://github.com/MoOmEeN/endo2java
-//		https://github.com/Gvaireth/EndoConnector
-
 	}
 }

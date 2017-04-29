@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 @Component
 public class DownloadPage {
@@ -16,12 +17,16 @@ public class DownloadPage {
     public static final String HTTP_URL_HOME = "https://www.endomondo.com/home";
     public static final String HTTP_URL_SESSION = "https://www.endomondo.com/rest/session";
     public static final String HTTP_URL_CHALLENGE = "https://www.endomondo.com/challenges";
-	private SessionLoginRequest sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", "", true);
+	private SessionLoginRequest sessionLoginRequest;
 	private Map<String, String> cookiesSession;
 	private Map<String, String> cookiesHome;
 
 	@PostConstruct
-	public void startBean() {
+	public void startBean() throws IOException {
+		Properties prop = new Properties();
+		prop.load(getClass().getClassLoader().getResourceAsStream("app.properties"));
+		sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", prop.get("password").toString(), true);
+
 		try {
 			conectAndGetSession();
 		} catch (IOException e) {
@@ -29,7 +34,7 @@ public class DownloadPage {
 		}
 
 		try {
-			dowloadAndParseChallenge("/32422477");
+			dowloadAndParseChallenge(prop.get("challenge").toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +67,7 @@ public class DownloadPage {
 
     public void dowloadAndParseChallenge(String challengeId) throws IOException {
 		Connection.Response res3 = Jsoup
-				.connect(HTTP_URL_CHALLENGE + challengeId)
+				.connect(HTTP_URL_CHALLENGE +"/"+ challengeId)
 				.header("X-CSRF-TOKEN", cookiesHome.get("CSRF_TOKEN"))
 				.header("Content-Type", "application/json;charset=utf-8")
 				.header("Accept", "application/json, text/plain, */*")
