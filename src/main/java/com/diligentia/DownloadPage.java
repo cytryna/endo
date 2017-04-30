@@ -6,10 +6,10 @@ import com.diligentia.service.BookService;
 import com.google.gson.Gson;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class DownloadPage {
     private Map<String, String> cookiesSession;
     private Map<String, String> cookiesHome;
 
-    @Inject
+    @Autowired
     private BookService bService;
 
     @PostConstruct
