@@ -1,5 +1,6 @@
 package com.diligentia;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +38,12 @@ public class HtmlParser {
 	private Person parseMember(Element element) {
 		String name = element.select("a.name").first().text();
 		String score = element.select("div.nose").first().text();
-		score = score.substring(0, score.indexOf("kcal") - 1);
-		return new Person(name, Integer.valueOf(score));
+        if (!score.contains("km")) {
+            return new Person(name, BigDecimal.ZERO);
+        }
+        score = score.substring(0, score.indexOf("km") - 1);
+        return new Person(name, new BigDecimal(score));
+
 	}
 
 
