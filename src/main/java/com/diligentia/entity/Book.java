@@ -6,17 +6,20 @@ import javax.persistence.Id;
 import java.util.Date;
 
 
-@Entity
+//@Entity
 public class Book {
 
-    @Id
-    @GeneratedValue
+//    @Id
+//    @GeneratedValue
     private long id;
     private String title;
-    private String autorFirstName;
-    private String autorLastName;
+    private Autor autor;
     private int numberPages;
     private Date dateRelease;
+
+    public Book(String title) {
+        this.title = title;
+    }
 
 
     //    @OneToOne
@@ -48,20 +51,12 @@ public class Book {
         this.dateRelease = dateRelease;
     }
 
-    public String getAutorFirstName() {
-        return autorFirstName;
+    public Autor getAutor() {
+        return autor;
     }
 
-    public void setAutorFirstName(String autorFirstName) {
-        this.autorFirstName = autorFirstName;
-    }
-
-    public String getAutorLastName() {
-        return autorLastName;
-    }
-
-    public void setAutorLastName(String autorLastName) {
-        this.autorLastName = autorLastName;
+    public void setAutor(Autor autor) {
+        this.autor = autor;
     }
 
     public int getNumberPages() {

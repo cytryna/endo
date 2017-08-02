@@ -2,15 +2,22 @@ package com.diligentia.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Autor {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String firstName;
     private String lastName;
+
+    public Autor(String firstName) {
+        String[] split = firstName.split(" ");
+        this.firstName = split[0];
+        this.lastName = split[1];
+    }
 
 
     public long getId() {
