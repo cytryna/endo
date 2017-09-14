@@ -8,41 +8,37 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-//        String html = "<p>An <a href='http://example.com/'><b>example</b></a> link.</p>";
-//        String text = doc.body().text(); // "An example link"
-//        String linkHref = ranking.attr("href"); // "http://example.com/"
-//        String linkText = ranking.text(); // "example""
-//
-//        String linkOuterH = ranking.outerHtml();
-//        // "<a href="http://example.com"><b>example</b></a>"
-//        String linkInnerH = ranking.html(); // "<b>example</b>"
+import org.springframework.stereotype.Component;
 
+//Tutorial https://jsoup.org/cookbook/extracting-data/attributes-text-html
+@Component
 public class HtmlParser {
 
-    public void parse(Document doc) {
+	public List<Member> enucleateMembersFromHtml(String html) {
+        Document doc = Jsoup.parse(html);
+        return parseDocs(doc);
+	}
+
+    private List<Member> parseDocs(Document doc) {
 
         Elements ranking = doc.select("div.chart-row");
 
-        List<Person> personList = new ArrayList<>();
+        List<Member> personList = new ArrayList<>();
         for (int i = 0; i < ranking.size(); i++) {
             Element element = ranking.get(i);
             personList.add(parseMember(element));
         }
+        return personList;
     }
 
-	public void parse(String html) {
-        Document doc = Jsoup.parse(html);
-        parse(doc);
-	}
-
-	private Person parseMember(Element element) {
+	private Member parseMember(Element element) {
 		String name = element.select("a.name").first().text();
 		String score = element.select("div.nose").first().text();
         if (!score.contains("km")) {
-            return new Person(name, BigDecimal.ZERO);
+            return new Member(name, BigDecimal.ZERO);
         }
         score = score.substring(0, score.indexOf("km") - 1);
-        return new Person(name, new BigDecimal(score));
+        return new Member(name, new BigDecimal(score));
 
 	}
 

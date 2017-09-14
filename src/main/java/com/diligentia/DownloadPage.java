@@ -1,6 +1,5 @@
 package com.diligentia;
 
-import com.diligentia.entity.Book;
 import com.diligentia.model.SessionLoginRequest;
 import com.diligentia.service.BookService;
 import com.google.gson.Gson;
@@ -27,32 +26,36 @@ public class DownloadPage {
 
     @Autowired
     private BookService bService;
+    @Autowired
+    private HtmlParser htmlParser;
+
 
     @PostConstruct
-    public void startBean() throws IOException {
+    public void downloadAndSaveScores() throws IOException {
         Properties prop = new Properties();
         prop.load(getClass().getClassLoader().getResourceAsStream("app.properties"));
         sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", prop.get("password").toString(), true);
 
-        conectAndGetSession();
-        dowloadAndParseChallenge(prop.get("challenge").toString());
+        getCookies();
+        getSession();
 
-//        List<Book> allBooks = bService.getAllBooks();
-//        for (int i = 0; i < allBooks.size() ; i++) {
-//            System.err.println(allBooks.get(i).getTitle());
-//         }
+        List<Member> scores = dowloadAndParseChallenge(prop.get("challenge").toString());
+
+//      TODO next: Save to database
 
     }
 
-    private void conectAndGetSession() throws IOException {
-        Gson gson = new Gson();
+    private void getCookies() throws IOException {
         Connection.Response res = Jsoup
                 .connect(HTTP_URL_HOME)
                 .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
                 .method(Connection.Method.GET)
                 .execute();
         cookiesHome = res.cookies();
+    }
 
+    private void getSession() throws IOException {
+        Gson gson = new Gson();
         Connection.Response res2 = Jsoup
                 .connect(HTTP_URL_SESSION)
                 .requestBody(gson.toJson(sessionLoginRequest))
@@ -66,10 +69,9 @@ public class DownloadPage {
                 .method(Connection.Method.POST)
                 .execute();
         cookiesSession = res2.cookies();
-
     }
 
-    public void dowloadAndParseChallenge(String challengeId) throws IOException {
+    public List<Member> dowloadAndParseChallenge(String challengeId) throws IOException {
         Connection.Response res3 = Jsoup
                 .connect(HTTP_URL_CHALLENGE + "/" + challengeId)
                 .header("X-CSRF-TOKEN", cookiesHome.get("CSRF_TOKEN"))
@@ -82,6 +84,6 @@ public class DownloadPage {
                 .method(Connection.Method.GET)
                 .execute();
 
-        new HtmlParser().parse(res3.body().toString());
+        return htmlParser.enucleateMembersFromHtml(res3.body().toString());
     }
 }

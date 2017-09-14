@@ -30,7 +30,7 @@ public class Main {
 
             entityManager.getTransaction().begin();
 
-            authorTemorary1 = new Autor("Ryszard Mickiewicz");//stworzenie autora w pamieci
+            authorTemorary1 = new Autor("Marcin Chabior");//stworzenie autora w pamieci
             entityManager.persist(authorTemorary1);//zapis do bazy
 //            saveBook("Pan Tadeusz", authorTemorary1);
 //            saveBook("Sonety krymskie", authorTemorary1);
@@ -146,7 +146,7 @@ public class Main {
 //    }
 //
 //    private static Date stringToDate(String testDate) throws ParseException {
-//        return formatter.parse(testDate);
+//        return formatter.enucleateMembersFromHtml(testDate);
 //    }
 
 //    public Author getRandomAutor() {
