@@ -1,7 +1,7 @@
 package com.diligentia;
 
 import com.diligentia.model.SessionLoginRequest;
-import com.diligentia.service.BookService;
+import com.diligentia.service.EndoService;
 import com.google.gson.Gson;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -25,9 +25,10 @@ public class DownloadPage {
     private Map<String, String> cookiesHome;
 
     @Autowired
-    private BookService bService;
+    private EndoService endoService;
     @Autowired
     private HtmlParser htmlParser;
+
 
 
     @PostConstruct
@@ -40,6 +41,8 @@ public class DownloadPage {
         getSession();
 
         List<Member> scores = dowloadAndParseChallenge(prop.get("challenge").toString());
+
+        endoService.getAllMembers().stream().forEach(member -> System.err.println(member.getName()));
 
 //      TODO next: Save to database
 

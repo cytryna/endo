@@ -1,10 +1,13 @@
 package com.diligentia.dao;
 
 import com.diligentia.entity.Book;
+import com.diligentia.entity.MemberEntity;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Repository
 public class BookDao {
 
     private static int i = 0;
@@ -16,9 +19,9 @@ public class BookDao {
         em = entityManagerFactory.createEntityManager();
     }
 
-    public List<Book> getAllBooks() {
-        Query query = em.createQuery("SELECT e FROM Book e");
-        return (List<Book>) query.getResultList();
+    public List<MemberEntity> getAllMembers() {
+        Query query = em.createQuery("SELECT e FROM MemberEntity e");
+        return (List<MemberEntity>) query.getResultList();
     }
 
     public void persistBook(Book book) {

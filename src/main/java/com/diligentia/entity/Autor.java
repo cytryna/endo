@@ -13,6 +13,9 @@ public class Autor {
     private String firstName;
     private String lastName;
 
+    public Autor() {
+    }
+
     public Autor(String firstName) {
         String[] split = firstName.split(" ");
         this.firstName = split[0];

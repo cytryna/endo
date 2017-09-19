@@ -17,9 +17,13 @@ public class Member {
 //        System.err.println(this);
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
-        return "Member{" +
+        return "MemberEntity{" +
                 "name='" + name + '\'' +
                 ", score=" + score +
                 '}';
