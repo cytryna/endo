@@ -53,10 +53,10 @@ public class PrinCalendar {
                 // Increment the count and find the index of the word
                 linecount++;
                 int indexfound = line.indexOf(stringSearch);
-
                 // If greater than -1, means we found the word
                 if (indexfound > -1) {
-                    System.out.println("Word was found at position " + indexfound + " on line " + linecount);
+                    System.err.println(line);
+//                    System.out.println("Word was found at position " + indexfound + " on line " + linecount);
                 }
             }
 
