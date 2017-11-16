@@ -25,10 +25,10 @@ public class GenerateCalendar {
     private static String EVENT_TEMPLATE =  "BEGIN:VEVENT\n" +
             "DTSTART:"+ DATE_HOLDER +"T090000Z\n" +
             "DTEND:"+ DATE_HOLDER +"T100000Z\n" +
-            "DTSTAMP:20170917T083027Z\n" +
-            "CREATED:20170917T082905Z\n" +
+            "DTSTAMP:20171111T083027Z\n" +
+            "CREATED:20171111T082905Z\n" +
             "DESCRIPTION:\n" +
-            "LAST-MODIFIED:20170917T083002Z\n" +
+            "LAST-MODIFIED:20171111T083002Z\n" +
             "LOCATION:\n" +
             "SEQUENCE:0\n" +
             "STATUS:CONFIRMED\n" +
@@ -42,13 +42,13 @@ public class GenerateCalendar {
     }
 
     private void start() {
-        LocalDate eventDate = LocalDate.of(2017, 12, 31);
+        LocalDate eventDate = LocalDate.of(2018, 1, 1);
 
         for (int i = 0; i < 100; i++) {
             if (eventDate.isBefore(LocalDate.now())) {
                 continue;
             }
-            events.add(prepereEventCalendar(eventDate, 110 + i));
+            events.add(prepereEventCalendar(eventDate, 115 + i));
             eventDate = eventDate.minusWeeks(1);
         }
         Collections.reverse(events);
