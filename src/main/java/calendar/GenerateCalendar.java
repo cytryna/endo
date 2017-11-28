@@ -42,16 +42,18 @@ public class GenerateCalendar {
     }
 
     private void start() {
-        LocalDate eventDate = LocalDate.of(2018, 1, 1);
-
+        LocalDate eventDate = LocalDate.of(2017, 11, 28);
+        double weight = 123;
         for (int i = 0; i < 100; i++) {
-            if (eventDate.isBefore(LocalDate.now())) {
+//            if (eventDate.isBefore(LocalDate.now())) {
+            if (weight < 110) {
                 continue;
             }
-            events.add(prepereEventCalendar(eventDate, 115 + i));
-            eventDate = eventDate.minusWeeks(1);
+            weight = weight - 0.5;
+            events.add(prepereEventCalendar(eventDate, String.valueOf(weight)));
+            eventDate = eventDate.plusWeeks(1);
         }
-        Collections.reverse(events);
+//        Collections.reverse(events);
         StringBuilder stringBuilder = new StringBuilder(GLOBAL_TAMPLATE_START);
         events.stream().forEach(s -> stringBuilder.append(s));
         stringBuilder.append(GLOBAL_TAMPLATE_END);
@@ -59,7 +61,7 @@ public class GenerateCalendar {
 
     }
 
-    private String prepereEventCalendar(LocalDate eventDate, int weight) {
+    private String prepereEventCalendar(LocalDate eventDate, String weight) {
         String event = EVENT_TEMPLATE.replace(DATE_HOLDER, "" + DateTimeFormatter.BASIC_ISO_DATE.format(eventDate));
         event = event.replace(SUMARY_HELDER, "Powinieneś ważyć "+weight+" kg");
         return event;
