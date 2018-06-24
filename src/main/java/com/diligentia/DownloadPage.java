@@ -42,7 +42,9 @@ public class DownloadPage {
 
         List<Member> scores = dowloadAndParseChallenge(prop.get("challenge").toString());
 
-        endoService.getAllMembers().stream().forEach(member -> System.err.println(member.getName()));
+       scores.stream().forEach(System.err::println);
+
+//        endoService.getAllMembers().stream().forEach(member -> System.err.println(member.getName()));
 
 //      TODO next: Save to database
 

@@ -9,6 +9,7 @@ public class Member {
 
     public Member(String name, BigDecimal score) {
         //TODO pobrać właściwe nazwisko dla dowolnego usera
+
         if ("Ty".equals(name)) {
             name = "Radosław Wichrowski";
         }
