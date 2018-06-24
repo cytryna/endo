@@ -1,5 +1,6 @@
 package calendar;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public class GenerateCalendar {
     private static String EVENT_TEMPLATE =  "BEGIN:VEVENT\n" +
             "DTSTART:"+ DATE_HOLDER +"T090000Z\n" +
             "DTEND:"+ DATE_HOLDER +"T100000Z\n" +
-            "DTSTAMP:20171111T083027Z\n" +
-            "CREATED:20171111T082905Z\n" +
+            "DTSTAMP:20180624T083027Z\n" +
+            "CREATED:20180624T082905Z\n" +
             "DESCRIPTION:\n" +
-            "LAST-MODIFIED:20171111T083002Z\n" +
+            "LAST-MODIFIED:20180624T083002Z\n" +
             "LOCATION:\n" +
             "SEQUENCE:0\n" +
             "STATUS:CONFIRMED\n" +
@@ -42,16 +43,17 @@ public class GenerateCalendar {
     }
 
     private void start() {
-        LocalDate eventDate = LocalDate.of(2017, 11, 28);
-        double weight = 123;
-        for (int i = 0; i < 100; i++) {
+        LocalDate eventDate = LocalDate.of(2019, 05, 20);
+        double weight = 99;
+        DecimalFormat df = new DecimalFormat("#.##");
+        for (int k = 0; k < 100; k++) {
 //            if (eventDate.isBefore(LocalDate.now())) {
-            if (weight < 110) {
+            if (eventDate.isBefore(LocalDate.now())) {
                 continue;
             }
-            weight = weight - 0.5;
-            events.add(prepereEventCalendar(eventDate, String.valueOf(weight)));
-            eventDate = eventDate.plusWeeks(1);
+            weight = weight + 0.5;
+            events.add(prepereEventCalendar(eventDate,  df.format(weight)));
+            eventDate = eventDate.minusWeeks(1);
         }
 //        Collections.reverse(events);
         StringBuilder stringBuilder = new StringBuilder(GLOBAL_TAMPLATE_START);
@@ -63,7 +65,7 @@ public class GenerateCalendar {
 
     private String prepereEventCalendar(LocalDate eventDate, String weight) {
         String event = EVENT_TEMPLATE.replace(DATE_HOLDER, "" + DateTimeFormatter.BASIC_ISO_DATE.format(eventDate));
-        event = event.replace(SUMARY_HELDER, "Powinieneś ważyć "+weight+" kg");
+        event = event.replace(SUMARY_HELDER, "Cel na ten tydzień to "+weight+" kg");
         return event;
     }
 }
