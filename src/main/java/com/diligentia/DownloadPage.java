@@ -30,7 +30,6 @@ public class DownloadPage {
     private HtmlParser htmlParser;
 
 
-
     @PostConstruct
     public void downloadAndSaveScores() throws IOException {
         Properties prop = new Properties();
@@ -61,18 +60,23 @@ public class DownloadPage {
 
     private void getSession() throws IOException {
         Gson gson = new Gson();
-        Connection.Response res2 = Jsoup
-                .connect(HTTP_URL_SESSION)
-                .requestBody(gson.toJson(sessionLoginRequest))
-                .header("X-CSRF-TOKEN", cookiesHome.get("CSRF_TOKEN"))
-                .header("Content-Type", "application/json;charset=utf-8")
-                .header("Accept", "application/json, text/plain, */*")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
-                .cookies(cookiesHome)
-                .ignoreContentType(true)
-                .method(Connection.Method.POST)
-                .execute();
+        Connection.Response res2 = null;
+        try {
+            res2 = Jsoup
+                    .connect(HTTP_URL_SESSION)
+                    .requestBody(gson.toJson(sessionLoginRequest))
+                    .header("X-CSRF-TOKEN", cookiesHome.get("CSRF_TOKEN"))
+                    .header("Content-Type", "application/json;charset=utf-8")
+                    .header("Accept", "application/json, text/plain, */*")
+                    .header("Accept-Language", "en-US,en;q=0.5")
+                    .userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:53.0) Gecko/20100101 Firefox/53.0")
+                    .cookies(cookiesHome)
+                    .ignoreContentType(true)
+                    .method(Connection.Method.POST)
+                    .execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         cookiesSession = res2.cookies();
     }
 
