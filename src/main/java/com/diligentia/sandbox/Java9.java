@@ -7,7 +7,7 @@ import java.util.stream.Stream;
  */
 public class Java9 {
     public static void main(String[] args) {
-        new Java9().takeWhileJava9();
+        new Java9().startTestJava8();
     }
 
     private void takeWhileJava9() {

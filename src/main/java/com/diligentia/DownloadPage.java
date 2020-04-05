@@ -1,7 +1,6 @@
 package com.diligentia;
 
 import com.diligentia.model.SessionLoginRequest;
-import com.diligentia.service.EndoService;
 import com.google.gson.Gson;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -25,15 +24,13 @@ public class DownloadPage {
     private Map<String, String> cookiesHome;
 
     @Autowired
-    private EndoService endoService;
-    @Autowired
     private HtmlParser htmlParser;
 
 
     @PostConstruct
     public void downloadAndSaveScores() throws IOException {
         Properties prop = new Properties();
-        prop.load(getClass().getClassLoader().getResourceAsStream("app.properties"));
+        prop.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
         sessionLoginRequest = new SessionLoginRequest("radoslaw.wichrowski@gmail.com", prop.get("password").toString(), true);
 
         getCookies();
